@@ -11,7 +11,7 @@
 
 ## 2. Host the privacy policy
 
-Public URL (GitHub Pages):
+Public URL (GitHub Pages, served from `docs/` on `main`):
 
 **https://sgeorge83.github.io/bible-widget-desktop/**
 
