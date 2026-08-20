@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Syntax check
+        run: python -m py_compile app.py
+
+      - name: Verify widget assets
+        shell: pwsh
+        run: |
+          $required = @(
+            "widget/index.html",
+            "widget/widget.css",
+            "widget/widget.js"
+          )
+          foreach ($f in $required) {
+            if (-not (Test-Path $f)) { throw "Missing $f" }
+          }
+          Write-Host "Widget assets OK"
+
+      - name: Smoke-test API endpoint
+        shell: pwsh
+        run: |
+          $res = Invoke-RestMethod -Uri "https://bible-widget-backend.vercel.app/api/morning" -TimeoutSec 30
+          if (-not $res.reference) { throw "API missing reference" }
+          if (-not $res.esv_text) { throw "API missing esv_text" }
+          Write-Host "API OK:" $res.reference
+
+      - name: Build PyInstaller package
+        run: |
+          pyinstaller --noconfirm --clean bible-widget-desktop.spec
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BibleWidgetDesktop-windows
+          path: dist/BibleWidgetDesktop
+          if-no-files-found: error

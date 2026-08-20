@@ -1,0 +1,218 @@
+/* WordOnAir brand palette — matched to wordonair.com */
+:root {
+  --woa-bg: #060b14;
+  --woa-bg-elevated: #0f1726;
+  --woa-surface: rgba(255, 255, 255, 0.08);
+  --woa-text: #f4f7fb;
+  --woa-text-muted: rgba(244, 247, 251, 0.72);
+  --woa-text-subtle: rgba(244, 247, 251, 0.45);
+  --woa-brand: #1a3a5c;
+  --woa-brand-light: #2d5f8a;
+  --woa-accent: #d4a853;
+  --woa-accent-soft: rgba(212, 168, 83, 0.18);
+  --woa-border: rgba(244, 247, 251, 0.12);
+  --woa-radius: 14px;
+  --woa-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--woa-text);
+  user-select: none;
+}
+
+.widget {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: linear-gradient(165deg, var(--woa-bg-elevated) 0%, var(--woa-bg) 55%);
+  border: 1px solid var(--woa-border);
+  border-radius: var(--woa-radius);
+  box-shadow: var(--woa-shadow);
+  padding: 18px;
+}
+
+.drag-region {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.cross-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--woa-accent);
+  flex-shrink: 0;
+}
+
+.title {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--woa-text);
+}
+
+.window-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--woa-border);
+  border-radius: 8px;
+  background: var(--woa-surface);
+  color: var(--woa-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--woa-text);
+}
+
+.icon-btn.active {
+  border-color: var(--woa-accent);
+  color: var(--woa-accent);
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--woa-border);
+  border-top-color: var(--woa-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 16px;
+  color: var(--woa-text);
+  margin-bottom: 6px;
+}
+
+.loading-sub {
+  font-size: 12px;
+  color: var(--woa-text-subtle);
+}
+
+.content.hidden,
+.hidden {
+  display: none;
+}
+
+.verse-text {
+  font-size: 16px;
+  line-height: 1.65;
+  text-align: center;
+  color: var(--woa-text);
+  margin-bottom: 10px;
+}
+
+.reference {
+  font-size: 13px;
+  text-align: center;
+  color: var(--woa-text-muted);
+  margin-bottom: 14px;
+}
+
+.message {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--woa-accent);
+  margin-bottom: 8px;
+}
+
+.meaning-box {
+  background: var(--woa-surface);
+  border: 1px solid var(--woa-border);
+  border-left: 3px solid var(--woa-accent);
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 4px;
+}
+
+.meaning {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #f0f0f0;
+}
+
+.status {
+  font-size: 10px;
+  text-align: center;
+  color: var(--woa-text-subtle);
+  margin-top: 8px;
+}
+
+.footer {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.brand-link {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--woa-text-subtle);
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.15s;
+}
+
+.brand-link:hover {
+  color: var(--woa-accent);
+}
+
+.disclaimer {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 9px;
+  line-height: 1.45;
+  color: rgba(244, 247, 251, 0.55);
+}

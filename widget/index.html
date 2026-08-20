@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verse of the Day — WordOnAir</title>
+  <link rel="stylesheet" href="widget.css">
+</head>
+<body>
+  <div class="widget" id="widget">
+    <header class="header drag-region">
+      <svg class="cross-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2v20M5 7h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <h1 class="title">VERSE OF THE DAY</h1>
+      <div class="window-controls no-drag">
+        <button type="button" id="btnRefresh" class="icon-btn" title="Refresh verse" aria-label="Refresh">↻</button>
+        <button type="button" id="btnPin" class="icon-btn active" title="Always on top" aria-label="Toggle always on top">📌</button>
+        <button type="button" id="btnClose" class="icon-btn" title="Close" aria-label="Close">✕</button>
+      </div>
+    </header>
+
+    <main class="body">
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p class="loading-text">Fetching today's verse...</p>
+        <p class="loading-sub">Connecting to Bible Widget</p>
+      </div>
+
+      <div id="content" class="content hidden">
+        <p class="verse-text" id="verseText"></p>
+        <p class="reference" id="reference"></p>
+        <p class="message hidden" id="message"></p>
+        <div class="meaning-box hidden" id="meaningBox">
+          <p class="meaning" id="meaning"></p>
+        </div>
+      </div>
+
+      <p id="status" class="status hidden"></p>
+    </main>
+
+    <footer class="footer">
+      <a class="brand-link" href="https://wordonair.com" target="_blank" rel="noopener">WORDONAIR LABS</a>
+      <p class="disclaimer">
+        Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © Crossway.
+      </p>
+    </footer>
+  </div>
+  <script src="widget.js"></script>
+</body>
+</html>
