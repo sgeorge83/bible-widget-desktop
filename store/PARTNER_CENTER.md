@@ -1,51 +1,65 @@
 # Microsoft Store submission guide
 
-## 1. Partner Center
+## 1. Partner Center app
 
 1. Open https://partner.microsoft.com/dashboard
 2. Create a new app: **Bible Widget — Verse of the Day**
-3. Reserve the name if available
-4. Publisher: WordOnAir Labs
+3. Reserve the name
+4. Publisher display name: **WordOnAir Labs**
+5. Copy **Package/Identity Name** and **Publisher** from **App identity**
+6. Put those values into `packaging/AppxManifest.xml` (or pass them to `build_msix.ps1`)
 
-## 2. Build the app
+## 2. Host the privacy policy
 
-On a Windows machine (or via GitHub Actions artifact):
+Public URL (GitHub Pages):
+
+**https://sgeorge83.github.io/bible-widget-desktop/**
+
+Paste that URL in Partner Center → Properties. Source file: `docs/index.html`.
+
+## 3. Build the Store package
+
+On Windows (or via GitHub Actions):
 
 ```powershell
-pip install -r requirements.txt
-pyinstaller --noconfirm --clean bible-widget-desktop.spec
+cd C:\Users\SharoonGeorge\Projects\BibleWidgetDesktop
+powershell -ExecutionPolicy Bypass -File packaging\build_msix.ps1 `
+  -IdentityName "YOUR_IDENTITY_NAME" `
+  -Publisher "CN=YOUR_PUBLISHER_ID" `
+  -Version 1.0.0.0
 ```
 
-Artifact folder: `dist\BibleWidgetDesktop\`
+Upload `dist\BibleWidgetDesktop_1.0.0.0_x64.msix` under **Packages**.
 
-## 3. Package as MSIX (recommended path)
+## 4. Listing
 
-Options:
+Paste copy from `store/listing/en-US/`.
 
-1. **Visual Studio** — Windows Application Packaging Project targeting the PyInstaller output folder
-2. **MSIX Packaging Tool** from the Microsoft Store
-3. **Partner Center** — upload unpackaged build only if you use a supported Desktop Bridge flow
+| Partner Center field | File |
+|----------------------|------|
+| Product name | `title.txt` |
+| Short description | `short_description.txt` |
+| Description | `full_description.txt` |
+| Search terms | `search_terms.txt` |
+| What’s new | `release_notes.txt` |
 
-Minimum package identity example:
+Category: **Lifestyle** (secondary: Books & reference).
 
-- Name: `WordOnAirLabs.BibleWidgetDesktop`
-- Publisher: your Partner Center publisher CN=
-- Version: `1.0.0.0`
+## 5. Age rating / declarations
 
-## 4. Capabilities
+- Age rating questionnaire: general audience, religious/spiritual content, no violence, no sexual content, no ads
+- This product does **not** use advertising ID
+- Windows capabilities: **internetClient** + **runFullTrust** (Win32 desktop widget — required for unpackaged-style Python/WinForms)
 
-Declare only what you need:
+When Partner Center asks why `runFullTrust` is needed: the app is a classic Win32 desktop widget (Python / Windows Forms), not a UWP app.
 
-- Internet (Client) — daily verse fetch
-- No microphone / camera / contacts
+## 6. Certification tips
 
-## 5. Certification tips
+- ESV copyright is already in the widget footer
+- Privacy policy URL must stay live
+- Screenshots should show **this** widget clearly
+- Test on Windows 10 1809+ / Windows 11 before submit
 
-- Include ESV copyright text in-app (already in the widget footer)
-- Privacy policy URL must be public HTTPS
-- Screenshots should clearly show the floating widget, not only the Store logo
-- Age rating: religious content, no mature themes
+## 7. After approval
 
-## 6. After approval
-
-Link the Store listing from wordonair.com and the Android Play listing for cross-promotion.
+Link the Store listing from wordonair.com and the Android Play listing.

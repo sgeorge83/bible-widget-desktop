@@ -3,11 +3,16 @@
 
 from PyInstaller.utils.hooks import collect_all
 
-datas = [("widget", "widget")]
+datas = [("widget/assets", "widget/assets")]
 binaries = []
-hiddenimports = []
+hiddenimports = ["verse", "clr"]
 
-tmp_ret = collect_all("webview")
+tmp_ret = collect_all("clr")
+datas += tmp_ret[0]
+binaries += tmp_ret[1]
+hiddenimports += tmp_ret[2]
+
+tmp_ret = collect_all("pythonnet")
 datas += tmp_ret[0]
 binaries += tmp_ret[1]
 hiddenimports += tmp_ret[2]
@@ -21,7 +26,7 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
+    excludes=["webview"],
     noarchive=False,
 )
 
@@ -43,6 +48,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon="packaging/Assets/app.ico",
 )
 
 coll = COLLECT(

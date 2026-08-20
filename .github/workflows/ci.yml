@@ -22,20 +22,27 @@ jobs:
           pip install -r requirements.txt
 
       - name: Syntax check
-        run: python -m py_compile app.py
+        run: python -m py_compile app.py verse.py
 
-      - name: Verify widget assets
+      - name: Generate Store assets
+        run: python packaging/generate_assets.py
+
+      - name: Verify widget and packaging files
         shell: pwsh
         run: |
           $required = @(
-            "widget/index.html",
-            "widget/widget.css",
-            "widget/widget.js"
+            "app.py",
+            "verse.py",
+            "packaging/AppxManifest.xml",
+            "packaging/Assets/StoreLogo.png",
+            "packaging/Assets/app.ico",
+            "store/privacy/privacy-policy.html",
+            "store/listing/en-US/title.txt"
           )
           foreach ($f in $required) {
             if (-not (Test-Path $f)) { throw "Missing $f" }
           }
-          Write-Host "Widget assets OK"
+          Write-Host "Packaging files OK"
 
       - name: Smoke-test API endpoint
         shell: pwsh
@@ -49,9 +56,30 @@ jobs:
         run: |
           pyinstaller --noconfirm --clean bible-widget-desktop.spec
 
+      - name: Stage MSIX payload
+        shell: pwsh
+        run: |
+          $payload = "dist/BibleWidgetDesktop"
+          Copy-Item packaging/AppxManifest.xml "$payload/AppxManifest.xml" -Force
+          New-Item -ItemType Directory -Force -Path "$payload/Assets" | Out-Null
+          Copy-Item packaging/Assets/*.png "$payload/Assets/" -Force
+
+      - name: Pack MSIX if Windows SDK is present
+        shell: pwsh
+        run: |
+          $make = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\makeappx.exe" -ErrorAction SilentlyContinue |
+            Sort-Object FullName -Descending | Select-Object -First 1
+          if (-not $make) {
+            Write-Host "makeappx.exe not found; uploading payload folder only"
+            exit 0
+          }
+          & $make.FullName pack /d dist\BibleWidgetDesktop /p dist\BibleWidgetDesktop_1.0.0.0_x64.msix /o
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: BibleWidgetDesktop-windows
-          path: dist/BibleWidgetDesktop
+          path: |
+            dist/BibleWidgetDesktop
+            dist/*.msix
           if-no-files-found: error

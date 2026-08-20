@@ -1,18 +1,15 @@
-/* WordOnAir brand palette — matched to wordonair.com */
+/* Light navy glass — wallpaper should show through */
 :root {
-  --woa-bg: #060b14;
-  --woa-bg-elevated: #0f1726;
-  --woa-surface: rgba(255, 255, 255, 0.08);
+  --woa-bg: rgba(72, 118, 178, 0.28);
+  --woa-surface: rgba(255, 255, 255, 0.12);
   --woa-text: #f4f7fb;
-  --woa-text-muted: rgba(244, 247, 251, 0.72);
-  --woa-text-subtle: rgba(244, 247, 251, 0.45);
-  --woa-brand: #1a3a5c;
-  --woa-brand-light: #2d5f8a;
-  --woa-accent: #d4a853;
-  --woa-accent-soft: rgba(212, 168, 83, 0.18);
-  --woa-border: rgba(244, 247, 251, 0.12);
-  --woa-radius: 14px;
-  --woa-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  --woa-text-muted: rgba(244, 247, 251, 0.86);
+  --woa-text-subtle: rgba(244, 247, 251, 0.58);
+  --woa-gold: #d4a853;
+  --woa-teal: #5ec4cf;
+  --woa-border: rgba(180, 210, 240, 0.35);
+  --woa-radius: 16px;
+  --woa-pad: clamp(12px, 3.5vmin, 20px);
 }
 
 * {
@@ -25,21 +22,43 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: transparent;
+  background: transparent !important;
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--woa-text);
   user-select: none;
 }
 
 .widget {
+  position: relative;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
   min-height: 100%;
-  background: linear-gradient(165deg, var(--woa-bg-elevated) 0%, var(--woa-bg) 55%);
+  overflow: hidden;
+  background: var(--woa-bg);
+  backdrop-filter: blur(14px) saturate(1.25);
+  -webkit-backdrop-filter: blur(14px) saturate(1.25);
   border: 1px solid var(--woa-border);
   border-radius: var(--woa-radius);
-  box-shadow: var(--woa-shadow);
-  padding: 18px;
+  padding: var(--woa-pad);
+}
+
+.watermark {
+  position: absolute;
+  inset: 0;
+  background: url("assets/wordonair-mark.png") center center / min(52vmin, 250px) no-repeat;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.header,
+.body,
+.footer {
+  position: relative;
+  z-index: 1;
 }
 
 .drag-region {
@@ -53,34 +72,40 @@ html, body {
 .header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: clamp(6px, 1.5vmin, 10px);
+  flex-shrink: 0;
+  margin-bottom: clamp(8px, 2vmin, 14px);
 }
 
-.cross-icon {
-  width: 22px;
-  height: 22px;
-  color: var(--woa-accent);
+.logo-icon {
+  width: clamp(26px, 6vmin, 34px);
+  height: clamp(26px, 6vmin, 34px);
+  border-radius: 8px;
   flex-shrink: 0;
 }
 
 .title {
   flex: 1;
-  font-size: 13px;
+  min-width: 0;
+  font-size: clamp(10px, 2.8vmin, 13px);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--woa-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .window-controls {
   display: flex;
   gap: 4px;
+  flex-shrink: 0;
 }
 
 .icon-btn {
-  width: 28px;
-  height: 28px;
+  width: clamp(24px, 5.5vmin, 28px);
+  height: clamp(24px, 5.5vmin, 28px);
   border: 1px solid var(--woa-border);
   border-radius: 8px;
   background: var(--woa-surface);
@@ -91,32 +116,34 @@ html, body {
 }
 
 .icon-btn:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(94, 196, 207, 0.22);
   color: var(--woa-text);
 }
 
 .icon-btn.active {
-  border-color: var(--woa-accent);
-  color: var(--woa-accent);
+  border-color: var(--woa-gold);
+  color: var(--woa-gold);
 }
 
 .body {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: auto;
 }
 
 .loading {
   text-align: center;
-  padding: 20px 0;
+  padding: 12px 0;
 }
 
 .spinner {
   width: 22px;
   height: 22px;
   border: 2px solid var(--woa-border);
-  border-top-color: var(--woa-accent);
+  border-top-color: var(--woa-gold);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin: 0 auto 12px;
@@ -127,14 +154,17 @@ html, body {
 }
 
 .loading-text {
-  font-size: 16px;
-  color: var(--woa-text);
+  font-size: clamp(14px, 3.4vmin, 16px);
   margin-bottom: 6px;
 }
 
 .loading-sub {
-  font-size: 12px;
+  font-size: clamp(11px, 2.6vmin, 12px);
   color: var(--woa-text-subtle);
+}
+
+.content {
+  min-height: 0;
 }
 
 .content.hidden,
@@ -143,44 +173,46 @@ html, body {
 }
 
 .verse-text {
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: clamp(14px, 3.6vmin, 18px);
+  line-height: 1.6;
   text-align: center;
   color: var(--woa-text);
-  margin-bottom: 10px;
+  margin-bottom: clamp(6px, 1.6vmin, 10px);
+  text-shadow: 0 1px 10px rgba(20, 40, 80, 0.45);
 }
 
 .reference {
-  font-size: 13px;
+  font-size: clamp(12px, 2.8vmin, 14px);
+  font-weight: 600;
   text-align: center;
-  color: var(--woa-text-muted);
-  margin-bottom: 14px;
+  color: var(--woa-gold);
+  margin-bottom: clamp(8px, 2vmin, 14px);
 }
 
 .message {
-  font-size: 11px;
+  font-size: clamp(10px, 2.4vmin, 11px);
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   text-align: center;
-  color: var(--woa-accent);
+  color: var(--woa-teal);
   margin-bottom: 8px;
 }
 
 .meaning-box {
   background: var(--woa-surface);
   border: 1px solid var(--woa-border);
-  border-left: 3px solid var(--woa-accent);
+  border-left: 3px solid var(--woa-gold);
   border-radius: 10px;
-  padding: 12px;
+  padding: clamp(8px, 2vmin, 12px);
   margin-top: 4px;
 }
 
 .meaning {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 13px;
+  font-size: clamp(12px, 2.8vmin, 14px);
   line-height: 1.55;
-  color: #f0f0f0;
+  color: var(--woa-text-muted);
 }
 
 .status {
@@ -188,31 +220,32 @@ html, body {
   text-align: center;
   color: var(--woa-text-subtle);
   margin-top: 8px;
+  flex-shrink: 0;
 }
 
 .footer {
-  margin-top: 14px;
+  flex-shrink: 0;
+  margin-top: clamp(8px, 2vmin, 14px);
   text-align: center;
 }
 
 .brand-link {
   display: inline-block;
-  font-size: 10px;
+  font-size: clamp(9px, 2.2vmin, 10px);
   font-weight: 600;
   letter-spacing: 0.2em;
   color: var(--woa-text-subtle);
   text-decoration: none;
-  margin-bottom: 10px;
-  transition: color 0.15s;
+  margin-bottom: 8px;
 }
 
 .brand-link:hover {
-  color: var(--woa-accent);
+  color: var(--woa-gold);
 }
 
 .disclaimer {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 9px;
+  font-size: clamp(8px, 2vmin, 9px);
   line-height: 1.45;
-  color: rgba(244, 247, 251, 0.55);
+  color: var(--woa-text-subtle);
 }

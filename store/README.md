@@ -2,6 +2,9 @@
 
 Publisher: **WordOnAir Labs**  
 Homepage: https://wordonair.com  
+Privacy policy URL for Partner Center:
+
+https://sgeorge83.github.io/bible-widget-desktop/  
 Repo: https://github.com/sgeorge83/bible-widget-desktop
 
 ## Product identity
@@ -10,52 +13,53 @@ Repo: https://github.com/sgeorge83/bible-widget-desktop
 |------|--------|
 | App name | Bible Widget — Verse of the Day |
 | Short name | Bible Widget |
+| Package identity name | `WordOnAirLabs.BibleWidgetDesktop` (replace with Partner Center value) |
 | Publisher display | WordOnAir Labs |
-| Category | Lifestyle / Books & reference |
-| Age rating | Suitable for all ages (religious text) |
+| Category | Lifestyle, or Books & reference |
+| Age rating | Suitable for all ages (religious text, no ads) |
+| Price | Free |
 
 ## Listing (en-US)
 
-### Title
-Bible Widget — Verse of the Day
-
-### Short description
-Daily ESV verse on your Windows desktop — same WordOnAir widget you know from Android.
-
-### Full description
-Bible Widget places today's English Standard Version (ESV) verse on your Windows desktop as a floating, always-on-top widget.
-
-Features:
-• Verse of the Day with reference
-• Short Verse Insight / simplified meaning
-• Updates each morning (Asia/Dubai schedule, same as the Android widget)
-• Works offline with the last cached verse
-• WordOnAir Labs branding and colors from wordonair.com
-
-Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © Crossway.
-
-Published by WordOnAir Labs. Learn more at https://wordonair.com
+Copy from `store/listing/en-US/`.
 
 ## Privacy
 
-This app:
+See `store/privacy/`. Host the HTML on GitHub Pages, wordonair.com, or any public HTTPS URL, then paste that URL in Partner Center.
+
+The app:
 - Fetches the daily verse from `https://bible-widget-backend.vercel.app/api/morning`
-- Stores the last verse and window position locally on the device
+- Stores the last verse and window position locally
 - Does **not** require a Microsoft account
 - Does **not** collect personal data for advertising
 - Does **not** use advertising ID
 
-Host a privacy policy URL (you can reuse the Android policy under BibleWidgetApp `store/privacy/` if it covers this desktop client).
+## Package
 
-## Packaging checklist
+Build from the repo root:
 
-- [ ] Build `BibleWidgetDesktop.exe` via PyInstaller (CI artifact on GitHub Actions)
-- [ ] Create MSIX package (Visual Studio Packaging Project, or `MakeAppx` / Partner Center)
-- [ ] Add Store logos (44×44, 150×150, 310×150, Store logo)
-- [ ] Screenshots of the floating widget on a Windows 11 desktop
-- [ ] Partner Center listing + age rating questionnaire
-- [ ] Submit for certification
+```powershell
+powershell -ExecutionPolicy Bypass -File packaging\build_msix.ps1
+```
+
+Output:
+- Payload: `dist\BibleWidgetDesktop\`
+- MSIX (if Windows SDK is installed): `dist\BibleWidgetDesktop_1.0.0.0_x64.msix`
+
+Before packing for Store, set **Identity Name** and **Publisher CN** from Partner Center → App identity (see `packaging/identity.env.example`).
+
+Upload the `.msix` in Partner Center. Microsoft signs Store packages; you do not need a paid code-signing cert for Store submission.
+
+## Screenshots (you capture these)
+
+Partner Center needs at least one desktop screenshot. Recommended:
+
+1. Widget on a Windows 11 desktop with wallpaper showing through (1920×1080)
+2. Same widget resized larger, verse fully visible
+3. Start menu / pinned tile (optional)
+
+Do **not** include other companies’ widgets in the screenshot if you can avoid it.
 
 ## Notes
 
-True Windows 11 **Widgets Board** pins require a WinUI / Widget Provider package. This release is a **floating desktop widget** (closest match to the Android home-screen widget). A Widgets Board provider can be added later as a second package if needed.
+This is a **floating desktop widget** (closest match to the Android home-screen widget), packaged as a full-trust Win32 MSIX. A Windows 11 Widgets Board provider can be added later.

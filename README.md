@@ -14,22 +14,22 @@ Built by **WordOnAir Labs**.
 | Same API as Android | `https://bible-widget-backend.vercel.app/api/morning` |
 | Daily refresh | Targets **9:30 AM Asia/Dubai** (same as Android) |
 | Local cache | Keeps last verse if offline |
-| WordOnAir colors | Deep navy `#060B14`, light text `#F4F7FB`, gold accent `#D4A853` |
+| WordOnAir colors | Transparent light-navy glass (wallpaper shows through), gold `#D4A853`, teal `#5EC4CF` |
 | Structure | Title · verse · reference · insight · meaning · brand · ESV disclaimer |
 
 ---
 
 ## Run locally (Windows)
 
-Requirements: **Python 3.11+**, [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) (usually already installed on Windows 10/11).
+Requirements: **Python 3.11+** on Windows.
 
 ```powershell
-cd BibleWidgetDesktop
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+cd C:\Users\SharoonGeorge\Projects\BibleWidgetDesktop
+python -m pip install -r requirements.txt
 python app.py
 ```
+
+If PowerShell blocks `Activate.ps1`, skip the venv script and run `python app.py` directly. Drag the widget to move it; resize from the edges.
 
 ---
 
@@ -46,26 +46,26 @@ Output: `dist\BibleWidgetDesktop\BibleWidgetDesktop.exe`
 
 ## Microsoft Store
 
-See [`store/`](store/) for listing copy, privacy notes, and a packaging / Partner Center checklist.
+Full listing copy, privacy policy, and Partner Center steps: [`store/`](store/)
 
-High-level path:
+Build a Store package:
 
-1. Build the desktop app (PyInstaller or later WinUI packaging).
-2. Package as **MSIX** (e.g. with the Windows App Packaging tools / Partner Center).
-3. Submit via [Partner Center](https://partner.microsoft.com/dashboard).
+```powershell
+powershell -ExecutionPolicy Bypass -File packaging\build_msix.ps1
+```
+
+Then submit `dist\BibleWidgetDesktop_1.0.0.0_x64.msix` at [Partner Center](https://partner.microsoft.com/dashboard). Replace the Publisher CN in `packaging/AppxManifest.xml` with your Partner Center identity first.
 
 ---
 
 ## Project layout
 
 ```
-app.py                 # Floating WebView2 window (pywebview)
-widget/
-  index.html           # Widget chrome (matches Android layout)
-  widget.css           # WordOnAir palette
-  widget.js            # Fetch / cache / daily refresh
-store/                 # Store listing helpers
-.github/workflows/     # CI checks on GitHub
+app.py                 # Floating WinForms widget
+verse.py               # API fetch + cache
+packaging/             # AppxManifest, Store logos, MSIX build
+store/                 # Listing copy + privacy policy
+.github/workflows/     # CI: API check, exe, MSIX payload
 ```
 
 ---

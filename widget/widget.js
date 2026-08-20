@@ -1,6 +1,7 @@
 const API_URL = 'https://bible-widget-backend.vercel.app/api/morning';
 const CACHE_KEY = 'bibleWidgetDesktopCache';
 const DUBAI_OFFSET_HOURS = 4;
+const POLL_MS = 15 * 60 * 1000;
 
 function pad2(n) {
   return String(n).padStart(2, '0');
@@ -34,6 +35,11 @@ function saveCache(data) {
   localStorage.setItem(CACHE_KEY, JSON.stringify(data));
 }
 
+function verseKey(verse) {
+  if (!verse) return '';
+  return [verse.generated_at || '', verse.reference || '', verse.text || '', verse.meaning || ''].join('|');
+}
+
 function cleanVerseText(raw, reference) {
   let text = (raw || '').trim();
   if (text.includes('\n')) {
@@ -45,16 +51,11 @@ function cleanVerseText(raw, reference) {
   return text || raw || '';
 }
 
-async function fetchVerse(force = false) {
+async function fetchVerseFromApi() {
   const todayKey = todayKeyDubai();
-  const cache = loadCache();
-
-  if (!force && cache[todayKey]) {
-    return cache[todayKey];
-  }
-
   const res = await fetch(API_URL, {
     headers: { Accept: 'application/json' },
+    cache: 'no-store',
   });
 
   if (!res.ok) {
@@ -72,10 +73,10 @@ async function fetchVerse(force = false) {
     generated_at: json.generated_at || null,
   };
 
+  const cache = loadCache();
   cache[apiKey] = verse;
   cache.lastVerse = verse;
   saveCache(cache);
-
   return verse;
 }
 
@@ -117,20 +118,17 @@ function render(verse) {
   } else {
     meaningBox.classList.add('hidden');
   }
+
+  render.current = verse;
 }
 
 function showCachedOrError(err) {
   const cache = loadCache();
   const todayKey = todayKeyDubai();
+  const fallback = cache[todayKey] || cache.lastVerse;
 
-  if (cache[todayKey]) {
-    render(cache[todayKey]);
-    showOfflineStatus();
-    return;
-  }
-
-  if (cache.lastVerse) {
-    render(cache.lastVerse);
+  if (fallback) {
+    render(fallback);
     showOfflineStatus();
     return;
   }
@@ -140,16 +138,26 @@ function showCachedOrError(err) {
   console.error(err);
 }
 
-async function loadVerse(force = false) {
-  if (!force) {
+async function loadVerse({ force = false, silent = false } = {}) {
+  const cache = loadCache();
+  const cached = cache[todayKeyDubai()] || cache.lastVerse;
+  const contentHidden = document.getElementById('content').classList.contains('hidden');
+
+  if (!silent && !cached) {
     showLoading();
+  } else if (cached && contentHidden) {
+    render(cached);
   }
 
   try {
-    const verse = await fetchVerse(force);
-    render(verse);
+    const verse = await fetchVerseFromApi();
+    if (force || !render.current || verseKey(verse) !== verseKey(render.current)) {
+      render(verse);
+    }
   } catch (err) {
-    showCachedOrError(err);
+    if (!render.current) {
+      showCachedOrError(err);
+    }
   }
 }
 
@@ -165,12 +173,27 @@ function scheduleDailyRefresh() {
 
   const delay = next.getTime() - dubaiNow.getTime();
   setTimeout(() => {
-    loadVerse(true);
+    loadVerse({ force: true });
     scheduleDailyRefresh();
   }, delay);
 }
 
-document.getElementById('btnRefresh').addEventListener('click', () => loadVerse(true));
+function schedulePolling() {
+  setInterval(() => {
+    if (document.visibilityState === 'hidden') return;
+    loadVerse({ silent: true });
+  }, POLL_MS);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      loadVerse({ silent: true });
+    }
+  });
+}
+
+document.getElementById('btnRefresh').addEventListener('click', () => {
+  loadVerse({ force: true });
+});
 
 document.getElementById('btnPin').addEventListener('click', async () => {
   const btn = document.getElementById('btnPin');
@@ -191,6 +214,7 @@ document.getElementById('btnClose').addEventListener('click', () => {
 function startWhenReady() {
   loadVerse();
   scheduleDailyRefresh();
+  schedulePolling();
 }
 
 if (window.pywebview) {

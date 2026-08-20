@@ -1,0 +1,15 @@
+Bible Widget places today’s English Standard Version (ESV) verse on your Windows desktop as a floating, always-on-top widget — the same daily WordOnAir experience you know from Android.
+
+Features
+• Verse of the Day with scripture text and reference
+• Short Verse Insight / simplified meaning
+• Transparent light-navy glass so your wallpaper shows through
+• Drag to move, resize from the edges, pin on top
+• Updates each morning (Asia/Dubai schedule) and when the API refreshes
+• Works offline with the last cached verse
+• Tap WORDONAIR LABS to visit wordonair.com
+
+Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © Crossway.
+
+Published by WordOnAir Labs.
+https://wordonair.com

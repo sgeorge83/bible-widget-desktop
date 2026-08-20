@@ -1,0 +1,1 @@
+First Store release: floating Verse of the Day desktop widget for Windows.

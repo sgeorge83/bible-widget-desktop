@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap">
+
+  <!--
+    After you create the app in Partner Center, replace Identity Name and Publisher
+    with the values from Partner Center → App identity.
+  -->
+  <Identity
+    Name="WordOnAirLabs.BibleWidgetDesktop"
+    Publisher="CN=REPLACE_WITH_PARTNER_CENTER_PUBLISHER_ID"
+    Version="1.0.0.0"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>Bible Widget — Verse of the Day</DisplayName>
+    <PublisherDisplayName>WordOnAir Labs</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>Daily ESV verse on your Windows desktop from WordOnAir Labs.</Description>
+  </Properties>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Applications>
+    <Application
+      Id="BibleWidgetDesktop"
+      Executable="BibleWidgetDesktop.exe"
+      EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="Bible Widget — Verse of the Day"
+        Description="A floating desktop widget with today's ESV verse, insight, and WordOnAir branding."
+        BackgroundColor="#122648"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile
+          Wide310x150Logo="Assets\Wide310x150Logo.png"
+          Square71x71Logo="Assets\Square71x71Logo.png"
+          Square310x310Logo="Assets\Square310x310Logo.png"
+          ShortName="Bible Widget" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#122648" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>
